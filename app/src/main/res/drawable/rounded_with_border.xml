@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Adiciona uma forma retangular branca -->
+    <item>
+        <shape
+            android:shape="rectangle">
+            <solid android:color="@color/black" />
+        </shape>
+    </item>
+
+    <!-- Adiciona a borda branca -->
+    <item
+        android:left="1dp"
+        android:right="1dp"
+        android:top="1dp"
+        android:bottom="1dp">
+        <shape
+            android:shape="rectangle">
+            <solid android:color="@android:color/transparent" /> <!-- Define a cor de fundo como transparente -->
+            <stroke
+                android:width="2dp"
+                android:color="@color/white" /> <!-- Define a cor e a largura da borda -->
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+</layer-list>
+
