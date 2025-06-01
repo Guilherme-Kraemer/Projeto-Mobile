@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">My Pills</string>
-    <string name="title_activity_login">Login</string>
+    <string name="medication_widget_description">Shows today\'s medication schedule and reminders</string>
+    <string name="finance_widget_description">Displays financial summary and medication expenses</string>
+    <string name="shopping_widget_description">Shows active shopping list with budget tracking</string>
+    <string name="transport_widget_description">Displays nearby bus arrivals and routes</string>
 </resources>

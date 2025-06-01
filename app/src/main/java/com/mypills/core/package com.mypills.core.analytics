@@ -1,0 +1,40 @@
+package com.mypills.core.analytics
+
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class AnalyticsManager @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val database: com.mypills.core.database.AppDatabase
+) {
+    private val scope = CoroutineScope(Dispatchers.IO)
+
+    fun trackEvent(event: String, properties: Map<String, String> = emptyMap()) {
+        scope.launch {
+            // Store analytics locally (privacy-focused)
+            val usage = com.mypills.core.database.entity.AppUsageEntity(
+                id = java.util.UUID.randomUUID().toString(),
+                feature = event,
+                action = properties["action"] ?: "unknown",
+                metadata = properties.toString(),
+                timestamp = kotlinx.datetime.Clock.System.now()
+            )
+            
+            database.analyticsDao().insertUsageEvent(usage)
+        }
+    }
+
+    fun trackScreenView(screenName: String) {
+        trackEvent("screen_view", mapOf("screen" to screenName))
+    }
+
+    fun trackFeatureUsage(feature: String, action: String) {
+        trackEvent(feature, mapOf("action" to action))
+    }
+}

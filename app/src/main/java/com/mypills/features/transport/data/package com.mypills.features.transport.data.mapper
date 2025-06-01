@@ -1,0 +1,92 @@
+package com.mypills.features.transport.data.mapper
+
+import com.mypills.core.database.entity.*
+import com.mypills.features.transport.domain.model.*
+import com.mypills.features.transport.data.api.*
+
+fun BusRouteEntity.toDomain(): BusRoute = BusRoute(
+    id = id,
+    routeNumber = routeNumber,
+    routeName = routeName,
+    company = company,
+    startLocation = startLocation,
+    endLocation = endLocation,
+    distance = distance,
+    estimatedDuration = estimatedDuration,
+    fare = fare,
+    isActive = isActive,
+    lastUpdated = lastUpdated
+)
+
+fun BusRoute.toEntity(): BusRouteEntity = BusRouteEntity(
+    id = id,
+    routeNumber = routeNumber,
+    routeName = routeName,
+    company = company,
+    startLocation = startLocation,
+    endLocation = endLocation,
+    distance = distance,
+    estimatedDuration = estimatedDuration,
+    fare = fare,
+    isActive = isActive,
+    lastUpdated = lastUpdated
+)
+
+fun BusStopEntity.toDomain(): BusStop = BusStop(
+    id = id,
+    name = name,
+    address = address,
+    latitude = latitude,
+    longitude = longitude,
+    hasAccessibility = hasAccessibility,
+    amenities = amenities
+)
+
+fun BusStop.toEntity(): BusStopEntity = BusStopEntity(
+    id = id,
+    name = name,
+    address = address,
+    latitude = latitude,
+    longitude = longitude,
+    hasAccessibility = hasAccessibility,
+    amenities = amenities
+)
+
+fun FavoriteRouteEntity.toDomain(): FavoriteRoute = FavoriteRoute(
+    id = id,
+    name = name,
+    fromStopId = fromStopId,
+    toStopId = toStopId,
+    routeIds = routeIds,
+    createdAt = createdAt
+)
+
+fun FavoriteRoute.toEntity(): FavoriteRouteEntity = FavoriteRouteEntity(
+    id = id,
+    name = name,
+    fromStopId = fromStopId,
+    toStopId = toStopId,
+    routeIds = routeIds,
+    createdAt = createdAt
+)
+
+fun ApiArrival.toDomain(): BusArrival = BusArrival(
+    routeId = routeId,
+    stopId = stopId,
+    estimatedArrival = kotlinx.datetime.Instant.fromEpochMilliseconds(arrivalTime),
+    delay = delay,
+    vehicleId = vehicleId,
+    lastUpdated = kotlinx.datetime.Clock.System.now()
+)
+
+fun ApiJourney.toDomain(): Journey {
+    // Simplified conversion - would need actual stop data
+    return Journey(
+        fromStop = BusStop("", "", null, 0.0, 0.0),
+        toStop = BusStop("", "", null, 0.0, 0.0),
+        routes = emptyList(),
+        totalDuration = duration,
+        totalDistance = distance,
+        totalFare = 0.0
+    )
+}

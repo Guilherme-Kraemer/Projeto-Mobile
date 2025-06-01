@@ -1,0 +1,665 @@
+package com.mypills.features.settings.presentation.screen
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.mypills.features.settings.presentation.viewmodel.SettingsViewModel
+import com.mypills.core.theme.ModuleCard
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SettingsScreen(
+    navController: NavController,
+    viewModel: SettingsViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        // Header
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Configurações",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+            
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(Icons.Filled.Close, contentDescription = "Fechar")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Profile Section
+            item {
+                ProfileSection(
+                    onEditProfile = { /* Navigate to profile edit */ }
+                )
+            }
+
+            // Notification Settings
+            item {
+                NotificationSettingsSection(
+                    notificationsEnabled = uiState.notificationsEnabled,
+                    reminderSound = uiState.reminderSound,
+                    onNotificationsToggle = viewModel::toggleNotifications,
+                    onSoundChange = viewModel::updateReminderSound
+                )
+            }
+
+            // Security Settings
+            item {
+                SecuritySettingsSection(
+                    biometricEnabled = uiState.biometricEnabled,
+                    onBiometricToggle = viewModel::toggleBiometric,
+                    onChangePin = { /* Navigate to PIN change */ }
+                )
+            }
+
+            // App Settings
+            item {
+                AppSettingsSection(
+                    theme = uiState.theme,
+                    language = uiState.language,
+                    autoBackup = uiState.autoBackupEnabled,
+                    onThemeChange = viewModel::updateTheme,
+                    onLanguageChange = viewModel::updateLanguage,
+                    onAutoBackupToggle = viewModel::toggleAutoBackup
+                )
+            }
+
+            // Data Management
+            item {
+                DataManagementSection(
+                    onExportData = viewModel::exportData,
+                    onImportData = viewModel::importData,
+                    onClearData = viewModel::clearAllData
+                )
+            }
+
+            // About Section
+            item {
+                AboutSection(
+                    version = uiState.appVersion,
+                    onPrivacyPolicy = { /* Navigate to privacy policy */ },
+                    onTermsOfUse = { /* Navigate to terms */ },
+                    onContactSupport = { /* Open support */ }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ProfileSection(
+    onEditProfile: () -> Unit
+) {
+    ModuleCard(module = "settings") {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = "Perfil do Usuário",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = "Gerencie suas informações pessoais",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                
+                TextButton(onClick = onEditProfile) {
+                    Text("Editar")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun NotificationSettingsSection(
+    notificationsEnabled: Boolean,
+    reminderSound: String,
+    onNotificationsToggle: (Boolean) -> Unit,
+    onSoundChange: (String) -> Unit
+) {
+    ModuleCard(module = "settings") {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "Notificações",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            // Enable notifications
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Notificações ativadas",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = "Receber lembretes e alertas",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                
+                Switch(
+                    checked = notificationsEnabled,
+                    onCheckedChange = onNotificationsToggle
+                )
+            }
+            
+            if (notificationsEnabled) {
+                Spacer(modifier = Modifier.height(12.dp))
+                
+                // Sound selection
+                var showSoundDialog by remember { mutableStateOf(false) }
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "Som do lembrete",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Text(
+                            text = reminderSound,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                    
+                    TextButton(onClick = { showSoundDialog = true }) {
+                        Text("Alterar")
+                    }
+                }
+                
+                if (showSoundDialog) {
+                    SoundSelectionDialog(
+                        currentSound = reminderSound,
+                        onSoundSelected = { sound ->
+                            onSoundChange(sound)
+                            showSoundDialog = false
+                        },
+                        onDismiss = { showSoundDialog = false }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SecuritySettingsSection(
+    biometricEnabled: Boolean,
+    onBiometricToggle: (Boolean) -> Unit,
+    onChangePin: () -> Unit
+) {
+    ModuleCard(module = "settings") {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "Segurança",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            // Biometric authentication
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Autenticação biométrica",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = "Use impressão digital ou face",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                
+                Switch(
+                    checked = biometricEnabled,
+                    onCheckedChange = onBiometricToggle
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            // Change PIN
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Alterar PIN",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = "Código de segurança do app",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                
+                TextButton(onClick = onChangePin) {
+                    Text("Alterar")
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AppSettingsSection(
+    theme: String,
+    language: String,
+    autoBackup: Boolean,
+    onThemeChange: (String) -> Unit,
+    onLanguageChange: (String) -> Unit,
+    onAutoBackupToggle: (Boolean) -> Unit
+) {
+    ModuleCard(module = "settings") {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "Preferências do App",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            // Theme selection
+            var showThemeDialog by remember { mutableStateOf(false) }
+            
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Tema",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = when (theme) {
+                            "light" -> "Claro"
+                            "dark" -> "Escuro"
+                            else -> "Sistema"
+                        },
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                
+                TextButton(onClick = { showThemeDialog = true }) {
+                    Text("Alterar")
+                }
+            }
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            // Auto backup
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Backup automático",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = "Salvar dados automaticamente",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                
+                Switch(
+                    checked = autoBackup,
+                    onCheckedChange = onAutoBackupToggle
+                )
+            }
+            
+            if (showThemeDialog) {
+                ThemeSelectionDialog(
+                    currentTheme = theme,
+                    onThemeSelected = { selectedTheme ->
+                        onThemeChange(selectedTheme)
+                        showThemeDialog = false
+                    },
+                    onDismiss = { showThemeDialog = false }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DataManagementSection(
+    onExportData: () -> Unit,
+    onImportData: () -> Unit,
+    onClearData: () -> Unit
+) {
+    var showClearDialog by remember { mutableStateOf(false) }
+    
+    ModuleCard(module = "settings") {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "Gerenciamento de Dados",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            // Export data
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Exportar dados",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = "Salvar backup dos seus dados",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                
+                TextButton(onClick = onExportData) {
+                    Text("Exportar")
+                }
+            }
+            
+            // Import data
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Importar dados",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = "Restaurar de um backup",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                
+                TextButton(onClick = onImportData) {
+                    Text("Importar")
+                }
+            }
+            
+            // Clear data
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = "Limpar todos os dados",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                    Text(
+                        text = "Excluir permanentemente",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                
+                TextButton(
+                    onClick = { showClearDialog = true },
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text("Limpar")
+                }
+            }
+        }
+    }
+    
+    if (showClearDialog) {
+        AlertDialog(
+            onDismissRequest = { showClearDialog = false },
+            title = { Text("Limpar todos os dados") },
+            text = { Text("Esta ação não pode ser desfeita. Todos os seus dados serão perdidos permanentemente.") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onClearData()
+                        showClearDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
+                    )
+                ) {
+                    Text("Confirmar")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showClearDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun AboutSection(
+    version: String,
+    onPrivacyPolicy: () -> Unit,
+    onTermsOfUse: () -> Unit,
+    onContactSupport: () -> Unit
+) {
+    ModuleCard(module = "settings") {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Text(
+                text = "Sobre",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
+            
+            Spacer(modifier = Modifier.height(12.dp))
+            
+            Text(
+                text = "My Pills",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
+            )
+            
+            Text(
+                text = "Versão $version",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            // Links
+            TextButton(
+                onClick = onPrivacyPolicy,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Política de Privacidade")
+            }
+            
+            TextButton(
+                onClick = onTermsOfUse,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Termos de Uso")
+            }
+            
+            TextButton(
+                onClick = onContactSupport,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Contatar Suporte")
+            }
+        }
+    }
+}
+
+@Composable
+private fun ThemeSelectionDialog(
+    currentTheme: String,
+    onThemeSelected: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val themes = listOf(
+        "system" to "Sistema",
+        "light" to "Claro",
+        "dark" to "Escuro"
+    )
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Escolher Tema") },
+        text = {
+            Column {
+                themes.forEach { (value, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = currentTheme == value,
+                            onClick = { onThemeSelected(value) }
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = label)
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Fechar")
+            }
+        }
+    )
+}
+
+@Composable
+private fun SoundSelectionDialog(
+    currentSound: String,
+    onSoundSelected: (String) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val sounds = listOf(
+        "default" to "Padrão",
+        "bell" to "Sino",
+        "chime" to "Carrilhão",
+        "alert" to "Alerta"
+    )
+    
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Escolher Som") },
+        text = {
+            Column {
+                sounds.forEach { (value, label) ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        RadioButton(
+                            selected = currentSound == value,
+                            onClick = { onSoundSelected(value) }
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(text = label)
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Fechar")
+            }
+        }
+    )
+}
