@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <style name="Theme.MyPills" parent="Theme.Material3.DayNight">
+        <!-- Primary colors -->
+        <item name="colorPrimary">@color/medication_primary</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorPrimaryContainer">@color/medication_secondary</item>
+        
+        <!-- Secondary colors -->
+        <item name="colorSecondary">@color/transport_primary</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+        
+        <!-- Error colors -->
+        <item name="colorError">@color/status_error</item>
+        <item name="colorOnError">@android:color/white</item>
+        
+        <!-- Surface colors -->
+        <item name="colorSurface">@android:color/white</item>
+        <item name="colorOnSurface">@android:color/black</item>
+        
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/medication_primary</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+    
+    <style name="Theme.MyPills.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/medication_primary</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_medication</item>
+        <item name="postSplashScreenTheme">@style/Theme.MyPills</item>
+    </style>
 </resources>

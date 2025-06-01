@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/widget_shopping_description"
+    android:initialKeyguardLayout="@layout/widget_shopping_keyguard"
+    android:initialLayout="@layout/widget_shopping"
     android:minWidth="250dp"
-    android:minHeight="200dp"
+    android:minHeight="150dp"
+    android:previewImage="@drawable/widget_shopping_preview"
+    android:resizeMode="horizontal|vertical"
     android:targetCellWidth="4"
     android:targetCellHeight="3"
     android:updatePeriodMillis="3600000"
-    android:resizeMode="horizontal|vertical"
-    android:widgetCategory="home_screen"
-    android:description="@string/shopping_widget_description"
-    android:previewImage="@drawable/shopping_widget_preview" />
+    android:widgetCategory="home_screen" />

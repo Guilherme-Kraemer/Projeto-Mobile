@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- Include user data -->
+        <include domain="sharedpref" path="."/>
+        <include domain="database" path="."/>
+        <!-- Exclude sensitive information -->
+        <exclude domain="sharedpref" path="biometric_settings.xml"/>
+        <exclude domain="files" path="keys/"/>
+    </cloud-backup>
+    
+    <device-transfer>
+        <!-- Include all user data for device transfer -->
+        <include domain="sharedpref" path="."/>
+        <include domain="database" path="."/>
+        <include domain="files" path="."/>
+        <!-- Exclude temporary and cache files -->
+        <exclude domain="cache" path="."/>
+        <exclude domain="files" path="temp/"/>
+    </device-transfer>
+</data-extraction-rules>

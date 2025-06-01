@@ -1,7 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">My Pills</string>
-    <string name="medication_widget_description">Shows today\'s medication schedule and reminders</string>
-    <string name="finance_widget_description">Displays financial summary and medication expenses</string>
-    <string name="shopping_widget_description">Shows active shopping list with budget tracking</string>
-    <string name="transport_widget_description">Displays nearby bus arrivals and routes</string>
+    <string name="title_activity_login">Login</string>
+    
+    <!-- Navigation -->
+    <string name="nav_dashboard">Início</string>
+    <string name="nav_medications">Medicamentos</string>
+    <string name="nav_reminders">Lembretes</string>
+    <string name="nav_finances">Finanças</string>
+    <string name="nav_transport">Transporte</string>
+    <string name="nav_shopping">Compras</string>
+    <string name="nav_assistant">Assistente</string>
+    
+    <!-- Common actions -->
+    <string name="action_add">Adicionar</string>
+    <string name="action_edit">Editar</string>
+    <string name="action_delete">Excluir</string>
+    <string name="action_save">Salvar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_confirm">Confirmar</string>
+    <string name="action_close">Fechar</string>
+    <string name="action_search">Buscar</string>
+    <string name="action_settings">Configurações</string>
+    
+    <!-- Medications -->
+    <string name="medication_name">Nome do medicamento</string>
+    <string name="medication_dosage">Dosagem</string>
+    <string name="medication_quantity">Quantidade</string>
+    <string name="medication_pharmacy">Farmácia</string>
+    <string name="medication_price">Preço</string>
+    <string name="medication_low_stock">Estoque baixo</string>
+    <string name="medication_expiring">Vencendo</string>
+    <string name="medication_expired">Vencido</string>
+    <string name="medication_take">Tomar</string>
+    <string name="medication_taken">Tomado</string>
+    
+    <!-- Reminders -->
+    <string name="reminder_time">Horário</string>
+    <string name="reminder_priority">Prioridade</string>
+    <string name="reminder_repeat">Repetir</string>
+    <string name="reminder_snooze">Soneca</string>
+    <string name="reminder_complete">Concluir</string>
+    <string name="reminder_overdue">Atrasado</string>
+    <string name="reminder_upcoming">Próximo</string>
+    
+    <!-- Finances -->
+    <string name="finance_income">Receita</string>
+    <string name="finance_expense">Despesa</string>
+    <string name="finance_balance">Saldo</string>
+    <string name="finance_budget">Orçamento</string>
+    <string name="finance_category">Categoria</string>
+    <string name="finance_medication_expenses">Gastos com medicamentos</string>
+    
+    <!-- Transport -->
+    <string name="transport_route">Rota</string>
+    <string name="transport_stop">Parada</string>
+    <string name="transport_arrival">Chegada</string>
+    <string name="transport_departure">Partida</string>
+    <string name="transport_nearby">Próximo</string>
+    <string name="transport_plan_route">Planejar rota</string>
+    
+    <!-- Shopping -->
+    <string name="shopping_list">Lista de compras</string>
+    <string name="shopping_item">Item</string>
+    <string name="shopping_quantity">Quantidade</string>
+    <string name="shopping_price">Preço</string>
+    <string name="shopping_total">Total</string>
+    <string name="shopping_budget">Orçamento</string>
+    <string name="shopping_optimize">Otimizar</string>
+    
+    <!-- Assistant -->
+    <string name="assistant_message">Mensagem</string>
+    <string name="assistant_suggestion">Sugestão</string>
+    <string name="assistant_help">Como posso ajudar?</string>
+    <string name="assistant_typing">Digitando...</string>
+    
+    <!-- Settings -->
+    <string name="settings_notifications">Notificações</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_language">Idioma</string>
+    <string name="settings_security">Segurança</string>
+    <string name="settings_backup">Backup</string>
+    <string name="settings_about">Sobre</string>
+    
+    <!-- Notifications -->
+    <string name="notification_medication_title">Hora do medicamento</string>
+    <string name="notification_medication_message">Não esqueça de tomar %s</string>
+    <string name="notification_budget_alert">Orçamento ultrapassado</string>
+    <string name="notification_stock_low">Estoque baixo em %s</string>
+    
+    <!-- Error messages -->
+    <string name="error_network">Erro de conexão</string>
+    <string name="error_generic">Algo deu errado</string>
+    <string name="error_required_field">Campo obrigatório</string>
+    <string name="error_invalid_format">Formato inválido</string>
+    
+    <!-- Success messages -->
+    <string name="success_saved">Salvo com sucesso</string>
+    <string name="success_deleted">Excluído com sucesso</string>
+    <string name="success_medication_taken">Medicamento registrado</string>
+    
+    <!-- Empty states -->
+    <string name="empty_medications">Nenhum medicamento cadastrado</string>
+    <string name="empty_reminders">Nenhum lembrete criado</string>
+    <string name="empty_transactions">Nenhuma transação encontrada</string>
+    <string name="empty_shopping_lists">Nenhuma lista de compras</string>
+    
+    <!-- Permissions -->
+    <string name="permission_camera_title">Permissão de câmera</string>
+    <string name="permission_camera_message">Necessário para escanear códigos de barras</string>
+    <string name="permission_location_title">Permissão de localização</string>
+    <string name="permission_location_message">Necessário para encontrar farmácias e paradas próximas</string>
+    <string name="permission_notification_title">Permissão de notificação</string>
+    <string name="permission_notification_message">Necessário para lembretes de medicamentos</string>
+
+        <!-- Widget descriptions -->
+    <string name="widget_medication_description">Mostra medicamentos do dia e lembretes</string>
+    <string name="widget_finance_description">Resumo financeiro e gastos com medicamentos</string>
+    <string name="widget_shopping_description">Lista de compras ativa com orçamento</string>
+    <string name="widget_transport_description">Próximos ônibus e rotas favoritas</string>
+    
+    <!-- Widget content -->
+    <string name="widget_no_medications">Nenhum medicamento hoje</string>
+    <string name="widget_no_reminders">Nenhum lembrete</string>
+    <string name="widget_loading">Carregando...</string>
+    <string name="widget_error">Erro ao carregar</string>
+    
+    <!-- Widget actions -->
+    <string name="widget_action_open_app">Abrir App</string>
+    <string name="widget_action_add_medication">Adicionar</string>
+    <string name="widget_action_mark_taken">Tomei</string>
+    <string name="widget_action_refresh">Atualizar</string>
 </resources>
