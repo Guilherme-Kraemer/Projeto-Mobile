@@ -167,4 +167,47 @@ class NotificationManager @Inject constructor(
             cancel(notificationId)
         }
     }
+
+ fun scheduleNotification(reminder: Reminder) {
+        if (!reminder.notificationEnabled) return
+        
+        val delay = reminder.scheduledTime.toEpochMilliseconds() - Clock.System.now().toEpochMilliseconds()
+        if (delay <= 0) return // Past reminder
+        
+        val workRequest = OneTimeWorkRequestBuilder<ReminderNotificationWorker>()
+            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+            .setInputData(workDataOf("reminder_id" to reminder.id))
+            .addTag("reminder_${reminder.id}")
+            .build()
+            
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            "reminder_${reminder.id}",
+            ExistingWorkPolicy.REPLACE,
+            workRequest
+        )
+    }
+    
+    fun cancelScheduledNotification(reminderId: String) {
+        WorkManager.getInstance(context).cancelUniqueWork("reminder_$reminderId")
+    }
+}
+
+@HiltWorker
+class ReminderNotificationWorker @AssistedInject constructor(
+    @Assisted context: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val notificationManager: NotificationManager,
+    private val remindersRepository: RemindersRepository
+) : CoroutineWorker(context, workerParams) {
+
+    override suspend fun doWork(): Result {
+        val reminderId = inputData.getString("reminder_id") ?: return Result.failure()
+        
+        val reminder = remindersRepository.getReminderById(reminderId)
+        if (reminder != null && !reminder.isCompleted) {
+            notificationManager.showReminderNotification(reminder)
+        }
+        
+        return Result.success()
+    }
 }

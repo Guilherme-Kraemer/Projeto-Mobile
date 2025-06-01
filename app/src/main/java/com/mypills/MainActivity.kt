@@ -32,83 +32,29 @@ import com.mypills.features.onboarding.presentation.viewmodel.OnboardingViewMode
  */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        // Instalar splash screen antes de super.onCreate()
-        val splashScreen = installSplashScreen()
-        
+        installSplashScreen()
         super.onCreate(savedInstanceState)
-        
-        // Configurar edge-to-edge display
         enableEdgeToEdge()
         
-        // Configurar conteúdo da UI
         setContent {
-            MyPillsApp()
-        }
-        
-        Timber.d("MainActivity criada")
-    }
-}
-
-/**
- * Composable principal da aplicação
- * Gerencia navegação entre onboarding e app principal
- */
-@Composable
-private fun MyPillsApp() {
-    // Aplicar tema Material 3 customizado
-    MyPillsTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background
-        ) {
-            AppContent()
+            MyPillsTheme {
+                // Decidir baseado em autenticação
+                AuthenticationDecisionFlow()
+            }
         }
     }
 }
 
-/**
- * Conteúdo principal - decide entre onboarding e navegação normal
- */
 @Composable
-private fun AppContent() {
-    val onboardingViewModel: OnboardingViewModel = hiltViewModel()
-    val shouldShowOnboarding by onboardingViewModel.shouldShowOnboarding.collectAsState()
+private fun AuthenticationDecisionFlow() {
+    val authViewModel: AuthViewModel = hiltViewModel()
+    val authState by authViewModel.authState.collectAsState()
     
-    // Aguardar carregamento das preferências
-    if (shouldShowOnboarding == null) {
-        // Tela de loading pode ser mostrada aqui
-        return
-    }
-    
-    if (shouldShowOnboarding == true) {
-        // Primeira vez - mostrar onboarding
-        OnboardingFlow(onboardingViewModel)
-    } else {
-        // Usuário já viu onboarding - ir direto para o app
-        AppNavigation()
-    }
-}
-
-/**
- * Fluxo de onboarding para novos usuários
- */
-@Composable
-private fun OnboardingFlow(viewModel: OnboardingViewModel) {
-    OnboardingScreen(
-        onOnboardingComplete = {
-            viewModel.completeOnboarding()
-        }
-    )
-    
-    // Observar quando onboarding for completado
-    val isOnboardingCompleted by viewModel.isOnboardingCompleted.collectAsState()
-    
-    LaunchedEffect(isOnboardingCompleted) {
-        if (isOnboardingCompleted) {
-            // Navegar para app principal
-            // A recomposição irá mostrar AppNavigation()
-        }
+    when (authState) {
+        AuthState.CHECKING -> SplashScreen()
+        AuthState.NEEDS_ONBOARDING -> OnboardingFlow()
+        AuthState.NEEDS_AUTH -> LoginScreen()
+        AuthState.AUTHENTICATED -> MainAppNavigation()
     }
 }
